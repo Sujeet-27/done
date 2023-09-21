@@ -1,0 +1,74 @@
+
+
+use role accountadmin;
+
+
+create or replce storage INTEGRAATION s3_int
+
+ type=external_stage
+ storage_provider= S3
+ Enabled = TRUE
+ storage_aws_role_arn=''
+ storage_allowed_locations=('')
+
+desc integration s3_int;
+
+
+
+
+use role accountadmin;
+
+
+create or replace storage INTEGRATION s3_int
+
+ type=external_stage
+ storage_provider= S3
+ Enabled = TRUE
+ storage_aws_role_arn='arn:aws:iam::260582215016:role/json_snowf'
+ storage_allowed_locations=('s3://clientlanding/');
+
+desc integration s3_int;
+
+create database json_data;
+use database json_data;
+create or replace schema pipeline;
+use schema pipeline;
+
+create file format ff2
+TYPE = csv;
+
+
+create or replace stage load_snow
+url='s3://clientlanding/'
+storage_integration=s3_int
+file_format=ff2;
+
+desc stage load_snow;
+show stages;
+
+
+
+
+create or replace table JSON_DATA.PIPELINE.snowtable
+(id INT,
+name STRING,
+salary DECIMAL(10,2)
+,dept_id INT);
+
+show tables;
+
+desc table snowtable;
+
+
+
+create or replace pipe json_data.pipeline.snowpipe auto_ingest =true as
+ copy into json_data.pipeline.snowtable
+ from @json_data.pipeline.LOAD_SNOW
+ file_format=(type='CSV',Field_delimiter=',',SKIP_HEADER=1);
+
+
+
+
+
+
+

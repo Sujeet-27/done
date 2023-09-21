@@ -1,0 +1,4 @@
+id,name,salary,dept_id
+1,sujeet,50000,101
+2,sahil,30000,102
+3,kratos,10000,103

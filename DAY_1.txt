@@ -1,0 +1,5 @@
+
+Flow :
+  
+s3 bucket >>> AWS Glue >>> S3 landing bucket >>> AWS SQS >>> Snowpipe >>>SNOWFLAKE
+
